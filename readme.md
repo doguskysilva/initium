@@ -23,7 +23,7 @@ All three target GNOME as the desktop environment.
 | `fedora.sh`    | Fedora equivalent of `apt.sh` (not implemented yet).                 |
 | `arch.sh`      | Arch equivalent of `apt.sh` (not implemented yet).                   |
 | `dotfiles.sh`  | Clones/updates [dotfiles](https://github.com/doguskysilva/dotfiles) and applies it with GNU Stow. |
-| `dev.sh`       | Cross-OS dev environment steps beyond what dotfiles already covers (not implemented yet). |
+| `dev.sh`       | Cross-OS: installs Oh My Zsh and sets zsh as the default login shell. |
 | `fonts.sh`     | Nerd Fonts installation, cross-OS (not implemented yet).             |
 | `gnome.sh`     | GNOME extensions, dconf settings, theming (not implemented yet).     |
 
@@ -46,3 +46,9 @@ This runs the OS-specific setup first, then the cross-OS steps
   `apt.sh` symlinks it into `~/.local/bin/fd`.
 - This repo grows incrementally: scripts and docs are added as each part of
   the setup gets built and tested on real hardware.
+- Every script is idempotent: safe to re-run `install.sh` (or any individual
+  script) on a machine that's already been set up, without duplicating work
+  or failing on things that already exist.
+- `zsh-autosuggestions` and `zsh-syntax-highlighting` are installed as system
+  packages in `apt.sh` (`/usr/share/zsh/plugins/...`), which is the path the
+  dotfiles' `zshrc/.config/zsh/init` already expects.

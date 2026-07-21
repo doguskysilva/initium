@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# TODO: passos de "cara de dev" comuns a qualquer SO, alem do que ja
-# vem via dotfiles.sh (nvim/tmux/zsh configs). Ex: oh-my-zsh, TPM,
-# mise, chsh -s zsh.
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+  RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
 
-echo "dev.sh ainda nao implementado" >&2
-exit 1
+if [ "$(basename "$SHELL")" != "zsh" ]; then
+  sudo chsh -s "$(command -v zsh)" "$USER"
+fi
