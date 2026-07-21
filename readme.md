@@ -1,13 +1,48 @@
-Tudo comeca com o sudo apt update && sudo apt full-upgrade -y
+# initium
 
-depois vem o que é chamado de essentials sudo apt install -y build-essential git curl wget unzip ca-certificates \
-  ripgrep fd-find fontconfig
-  
+Personal bootstrap for setting up a fresh machine with a full dev + GNOME
+desktop environment, regardless of the Linux distro. The goal: start from a
+clean install and end up with an identical setup every time.
 
-No Ubuntu o binário do fd chama fdfind. O LazyVim espera fd, então:
+## Status
 
-mkdir -p ~/.local/bin && ln -s $(which fdfind) ~/.local/bin/fd
+| OS      | Status      |
+|---------|-------------|
+| Ubuntu  | In progress |
+| Fedora  | Planned     |
+| Arch    | Planned     |
 
-Depois a instalacao base: apt install neovim tmux zsh -y
+All three target GNOME as the desktop environment.
 
+## Layout
 
+| Script         | Purpose                                                              |
+|----------------|-----------------------------------------------------------------------|
+| `install.sh`   | Entry point. Detects the OS (via `/etc/os-release`) and dispatches.  |
+| `apt.sh`       | Ubuntu/Debian: system update, essential packages, `fd` symlink.      |
+| `fedora.sh`    | Fedora equivalent of `apt.sh` (not implemented yet).                 |
+| `arch.sh`      | Arch equivalent of `apt.sh` (not implemented yet).                   |
+| `dotfiles.sh`  | Clones/updates [dotfiles](https://github.com/doguskysilva/dotfiles) and applies it with GNU Stow. |
+| `dev.sh`       | Cross-OS dev environment steps beyond what dotfiles already covers (not implemented yet). |
+| `fonts.sh`     | Nerd Fonts installation, cross-OS (not implemented yet).             |
+| `gnome.sh`     | GNOME extensions, dconf settings, theming (not implemented yet).     |
+
+## Usage
+
+```bash
+./install.sh
+```
+
+This runs the OS-specific setup first, then the cross-OS steps
+(`dotfiles.sh`, `dev.sh`, `fonts.sh`, `gnome.sh`) in that order.
+
+## Notes
+
+- The actual dotfiles (Neovim/LazyVim, tmux, zsh, starship, git config) live
+  in a separate private repo, [dotfiles](https://github.com/doguskysilva/dotfiles),
+  managed with [GNU Stow](https://www.gnu.org/software/stow/). `dotfiles.sh`
+  clones it and stows each package.
+- On Ubuntu, the `fd` binary ships as `fdfind`. Since LazyVim expects `fd`,
+  `apt.sh` symlinks it into `~/.local/bin/fd`.
+- This repo grows incrementally: scripts and docs are added as each part of
+  the setup gets built and tested on real hardware.
