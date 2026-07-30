@@ -8,10 +8,12 @@ sudo apt install -y build-essential git curl wget unzip ca-certificates \
   zsh-autosuggestions zsh-syntax-highlighting \
   fastfetch btop htop
 
-# Build deps for compiling PHP from source via mise/php-build (dev.sh)
-sudo apt install -y autoconf bison libcurl4-openssl-dev libedit-dev \
-  libonig-dev libqdbm-dev libreadline-dev libsodium-dev libsqlite3-dev \
-  libssl-dev libxml2-dev pkg-config re2c zlib1g-dev
+# Build deps for compiling PHP from source via mise's php plugin (dev.sh).
+# libgd-dev pulls in libpng/libjpeg/libwebp/libxpm/libfreetype for --enable-gd.
+sudo apt install -y autoconf bison gettext libcurl4-openssl-dev libedit-dev \
+  libgd-dev libicu-dev libmysqlclient-dev libonig-dev libqdbm-dev \
+  libreadline-dev libsodium-dev libsqlite3-dev libssl-dev libxml2-dev \
+  libzip-dev pkg-config re2c zlib1g-dev
 
 # No Ubuntu o binario do fd chama fdfind; o LazyVim espera fd
 mkdir -p ~/.local/bin
