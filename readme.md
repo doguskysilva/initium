@@ -138,4 +138,6 @@ This runs the OS-specific setup first, then the cross-OS steps
   installs, so they live in `apt.sh` like everything else there, not a
   separate script. Ghostty is packaged on Ubuntu directly; VS Code isn't,
   so `apt.sh` adds Microsoft's own apt repo (their recommended method for
-  Debian/Ubuntu) instead of the snap build.
+  Debian/Ubuntu) instead of the snap build. Their GPG key moved from
+  `keys/microsoft.gpg` to `keys/microsoft.asc` (the old URL now 404s) -
+  worth re-checking if this breaks again.
