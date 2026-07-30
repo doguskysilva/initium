@@ -15,6 +15,10 @@ if ! command -v mise &> /dev/null; then
 fi
 
 export PATH="$HOME/.local/bin:$PATH"
+# Without this, shims for tools mise installs below (composer, npm, ...)
+# only resolve by accident, inherited from whatever shell invoked this
+# script - not when this script is run fresh/non-interactively.
+eval "$(mise activate bash)"
 
 mise use -g node@lts
 mise use -g bun@latest

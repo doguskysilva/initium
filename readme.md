@@ -24,6 +24,7 @@ All three target GNOME as the desktop environment.
 | `arch.sh`      | Arch equivalent of `apt.sh` (not implemented yet).                   |
 | `dotfiles.sh`  | Clones/updates [dotfiles](https://github.com/doguskysilva/dotfiles) and applies it with GNU Stow. |
 | `dev.sh`       | Cross-OS: Oh My Zsh, default shell, mise + language runtimes, Composer, Podman socket, lazydocker. |
+| `ia.sh`        | Cross-OS: Claude Code, Codex CLI, OpenCode, GitHub Copilot CLI.      |
 | `fonts.sh`     | Cross-OS: installs JetBrainsMono/FiraCode Nerd Fonts + official JetBrains Mono. |
 | `gnome.sh`     | GNOME extensions, dconf settings, theming (not implemented yet).     |
 
@@ -34,7 +35,7 @@ All three target GNOME as the desktop environment.
 ```
 
 This runs the OS-specific setup first, then the cross-OS steps
-(`dotfiles.sh`, `dev.sh`, `fonts.sh`, `gnome.sh`) in that order.
+(`dotfiles.sh`, `dev.sh`, `ia.sh`, `fonts.sh`, `gnome.sh`) in that order.
 
 ## Notes
 
@@ -123,3 +124,13 @@ This runs the OS-specific setup first, then the cross-OS steps
   guards for their presence (`command -v ...`) before hooking them in, and
   `dotfiles.sh` already stows the `starship` config package — only the
   binaries themselves were missing.
+- `dev.sh` explicitly runs `eval "$(mise activate bash)"` right after
+  installing mise, so shims for everything installed afterward (composer,
+  npm, ...) resolve within the script itself — previously they only
+  resolved by accident, inherited from whatever shell happened to invoke
+  the script.
+- `ia.sh` installs each AI CLI the way its own platform recommends:
+  Claude Code and OpenCode via their official install scripts, Codex and
+  GitHub Copilot CLI via npm (`@openai/codex`, `@github/copilot`). Some of
+  these installers append their own PATH line directly to the dotfiles'
+  `.zshrc` (e.g. OpenCode) — expected, not something to revert.

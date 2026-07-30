@@ -23,5 +23,6 @@ esac
 
 "$SCRIPT_DIR/dotfiles.sh"
 "$SCRIPT_DIR/dev.sh"
+"$SCRIPT_DIR/ia.sh"
 "$SCRIPT_DIR/fonts.sh"
 "$SCRIPT_DIR/gnome.sh"
