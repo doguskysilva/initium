@@ -24,7 +24,7 @@ All three target GNOME as the desktop environment.
 | `arch.sh`      | Arch equivalent of `apt.sh` (not implemented yet).                   |
 | `dotfiles.sh`  | Clones/updates [dotfiles](https://github.com/doguskysilva/dotfiles) and applies it with GNU Stow. |
 | `dev.sh`       | Cross-OS: installs Oh My Zsh and sets zsh as the default login shell. |
-| `fonts.sh`     | Nerd Fonts installation, cross-OS (not implemented yet).             |
+| `fonts.sh`     | Cross-OS: installs JetBrainsMono/FiraCode Nerd Fonts + official JetBrains Mono. |
 | `gnome.sh`     | GNOME extensions, dconf settings, theming (not implemented yet).     |
 
 ## Usage
@@ -52,3 +52,9 @@ This runs the OS-specific setup first, then the cross-OS steps
 - `zsh-autosuggestions` and `zsh-syntax-highlighting` are installed as system
   packages in `apt.sh` (`/usr/share/zsh/plugins/...`), which is the path the
   dotfiles' `zshrc/.config/zsh/init` already expects.
+- `fonts.sh` downloads fonts directly from GitHub releases (pinned versions)
+  instead of distro packages, since patched Nerd Fonts aren't packaged on
+  every distro. This keeps it identical across Ubuntu/Fedora/Arch. It
+  installs Nerd Font builds of JetBrainsMono and FiraCode (for
+  terminal/tmux/nvim/starship), plus the official unpatched JetBrains Mono
+  (kept in reserve, e.g. as a GNOME UI font, decided in `gnome.sh`).
