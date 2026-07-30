@@ -118,3 +118,8 @@ This runs the OS-specific setup first, then the cross-OS steps
   `clojure-lsp` via Mason, since LazyVim only installs LSP servers on
   demand when a matching filetype is opened (Mason itself is lazy-loaded,
   hence `require('lazy').load(...)` before `MasonInstall`).
+- `starship`, `zoxide` and `fzf` are packaged on Ubuntu, so they're in
+  `apt.sh` alongside lazygit/rlwrap. The dotfiles' zsh `init` already
+  guards for their presence (`command -v ...`) before hooking them in, and
+  `dotfiles.sh` already stows the `starship` config package — only the
+  binaries themselves were missing.
