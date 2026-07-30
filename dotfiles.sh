@@ -10,4 +10,4 @@ else
 fi
 
 cd "$DOTFILES_DIR"
-stow -t ~ nvim tmux zshrc starship scripts git
+stow -t ~ nvim tmux zshrc starship scripts git vim

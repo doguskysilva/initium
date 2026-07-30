@@ -103,3 +103,18 @@ This runs the OS-specific setup first, then the cross-OS steps
 - `lazygit` is packaged on Ubuntu, so it's in `apt.sh`. `lazydocker` isn't,
   so `dev.sh` downloads its binary directly from GitHub releases (pinned
   version), same approach as `fonts.sh`.
+- PHP needs `libpq-dev` present *before* it's compiled to get `pdo_pgsql`
+  (same "only if pkg-config/pg_config finds it" pattern as `gd`/`zip`), so
+  it's in `apt.sh`'s PHP build deps alongside the others.
+- Ubuntu's `neovim` package registers itself as the `vim` alternative, so
+  plain `vim` opens nvim. `apt.sh` installs the real `vim` package and
+  resets the alternative to it, since nvim/LazyVim and plain Vim are meant
+  to stay separate (a `vim/.vimrc` dotfiles package holds a minimal,
+  plugin-free config for quick edits).
+- `dev.sh` also: clones TPM and installs tmux plugins (tmux.conf's own
+  bootstrap only fetches TPM itself, not the plugins); runs `nvim --headless
+  "+Lazy! sync"` so a fresh machine's LazyVim plugins are installed without
+  opening nvim by hand; and force-installs `intelephense`/`pyright`/
+  `clojure-lsp` via Mason, since LazyVim only installs LSP servers on
+  demand when a matching filetype is opened (Mason itself is lazy-loaded,
+  hence `require('lazy').load(...)` before `MasonInstall`).

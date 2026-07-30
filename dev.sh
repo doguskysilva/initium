@@ -17,6 +17,7 @@ fi
 export PATH="$HOME/.local/bin:$PATH"
 
 mise use -g node@lts
+mise use -g bun@latest
 
 # Ubuntu's libgd-dev ships no gdlib pkg-config file, which PHP's configure
 # needs to detect the system GD library, so the gd extension is disabled.
@@ -67,3 +68,24 @@ if ! command -v lazydocker &> /dev/null; then
   mv "$tmp_dir/lazydocker" "$HOME/.local/bin/lazydocker"
   rm -rf "$tmp_dir"
 fi
+
+# TPM (tmux plugin manager). tmux.conf itself runs its bootstrap script,
+# but the plugins still need fetching once.
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+fi
+"$HOME/.tmux/plugins/tpm/bin/install_plugins"
+
+# On a brand new machine this is what actually clones lazy.nvim's plugins
+# for the first time (nvim's own bootstrap in lua/config/lazy.lua kicks
+# this off, but doing it explicitly/headless makes it deterministic here).
+nvim --headless "+Lazy! sync" +qa
+
+# LazyVim only installs each LSP server on demand, when a matching
+# filetype is opened - it won't happen just from running nvim headless.
+# Force it so a fresh machine doesn't need to open a .php/.py/.clj file
+# once by hand first. Mason itself is lazy-loaded, so load it explicitly.
+nvim --headless \
+  -c "lua require('lazy').load({plugins={'mason.nvim'}})" \
+  -c "MasonInstall intelephense pyright clojure-lsp" \
+  -c "qa"
