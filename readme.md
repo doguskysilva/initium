@@ -23,7 +23,7 @@ All three target GNOME as the desktop environment.
 | `fedora.sh`    | Fedora equivalent of `apt.sh` (not implemented yet).                 |
 | `arch.sh`      | Arch equivalent of `apt.sh` (not implemented yet).                   |
 | `dotfiles.sh`  | Clones/updates [dotfiles](https://github.com/doguskysilva/dotfiles) and applies it with GNU Stow. |
-| `dev.sh`       | Cross-OS: Oh My Zsh, default shell, mise, Node.js (LTS) and PHP 8.4.  |
+| `dev.sh`       | Cross-OS: Oh My Zsh, default shell, mise, and language runtimes (Node, PHP, Rust, Go, Java/Clojure/Leiningen, Python via uv). |
 | `fonts.sh`     | Cross-OS: installs JetBrainsMono/FiraCode Nerd Fonts + official JetBrains Mono. |
 | `gnome.sh`     | GNOME extensions, dconf settings, theming (not implemented yet).     |
 
@@ -64,3 +64,36 @@ This runs the OS-specific setup first, then the cross-OS steps
   dependencies (`autoconf`, `libxml2-dev`, etc.) alongside the essentials.
   There is no Laravel Herd on Linux (macOS/Windows only), so don't
   reintroduce a `herd-lite` PATH entry in the dotfiles' `.zshrc`.
+- PHP's `gd` extension is disabled in `dev.sh` (`--disable-gd`): Ubuntu's
+  `libgd-dev` ships no `gdlib` pkg-config file, which PHP's configure needs
+  to detect the system GD library, so `--with-external-gd` can never
+  succeed there. Revisit if a project actually needs GD.
+- Rust, Go, Java (Temurin, LTS) and Clojure track `latest` in `mise`
+  (like `node@lts`) rather than a pinned version, since they install from
+  prebuilt binaries with no compile-time risk like PHP's. Java is only
+  there because Clojure's CLI and Leiningen both shell out to it.
+- The `lein` script mise/Leiningen installs ships with a hardcoded
+  `LEIN_VERSION` pointing at a snapshot build that no longer exists
+  upstream, unrelated to the jar actually downloaded. `dev.sh` patches
+  that version string in place after install so `lein` works.
+- Python is managed with `uv`, not `mise`, per preference. `uv` doesn't
+  shim a global `python`/`python3` the way `mise` does for other
+  languages — `uv python pin --global` only sets `uv`'s own fallback
+  version. Use `uv run python`, `uv venv`, etc. to actually get it.
+- Composer's global home (`COMPOSER_HOME`) is pinned to `~/.config/composer`
+  via the dotfiles' zsh envs, instead of the version-nested default mise's
+  PHP plugin picks (`.../php/8.4.24/.composer`). Otherwise every PHP patch
+  bump would silently lose globally-required packages like the Laravel
+  installer.
+- Podman instead of Docker: Fedora doesn't ship Docker Engine in its repos
+  while Podman is native there, and it works the same rootless way on all
+  three targets. `podman-docker` aliases the `docker` CLI to Podman, and
+  `podman-compose` pulls in the real `docker-compose-v2` plugin as an
+  external compose provider — so `docker compose ...` (what Laravel Sail
+  calls) works unmodified. This needs Podman's user API socket running
+  (`systemctl --user enable --now podman.socket`, in `dev.sh`), which is
+  what `docker-compose-v2` actually talks to.
+- Ubuntu wires apt's "command not found" suggestions into bash via
+  `/etc/bash.bashrc` automatically, but not into zsh — `/etc/zsh_command_not_found`
+  exists but needs an explicit `source`, which the dotfiles' `.zshrc` now
+  does (guarded, since that file is Ubuntu/Debian-only).

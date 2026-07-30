@@ -15,6 +15,11 @@ sudo apt install -y autoconf bison gettext libcurl4-openssl-dev libedit-dev \
   libreadline-dev libsodium-dev libsqlite3-dev libssl-dev libxml2-dev \
   libzip-dev pkg-config re2c zlib1g-dev
 
+# Podman instead of Docker: works the same across Ubuntu/Fedora/Arch,
+# rootless by default, and Fedora doesn't ship Docker Engine in its repos.
+# podman-docker aliases the docker CLI to podman for tools that expect it.
+sudo apt install -y podman podman-docker podman-compose
+
 # No Ubuntu o binario do fd chama fdfind; o LazyVim espera fd
 mkdir -p ~/.local/bin
 ln -sf "$(which fdfind)" ~/.local/bin/fd
