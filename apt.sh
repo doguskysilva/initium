@@ -6,7 +6,7 @@ sudo apt update && sudo apt full-upgrade -y
 sudo apt install -y build-essential git curl wget unzip ca-certificates \
   ripgrep fd-find fontconfig stow neovim vim tmux zsh \
   zsh-autosuggestions zsh-syntax-highlighting \
-  fastfetch btop htop lazygit rlwrap starship zoxide fzf ghostty
+  fastfetch btop htop lazygit rlwrap starship zoxide fzf ghostty eza
 
 # Build deps for compiling PHP from source via mise's php plugin (dev.sh).
 # libgd-dev pulls in libpng/libjpeg/libwebp/libxpm/libfreetype for --enable-gd.

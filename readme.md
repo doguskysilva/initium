@@ -145,3 +145,5 @@ This runs the OS-specific setup first, then the cross-OS steps
   same reasoning as VS Code: Ubuntu's package (2.46.0) was ~50 releases
   behind upstream (2.96.0). Their signing key expires 2026-09-05 - if `gh`
   installs start failing after that, it's the key, re-fetch the URL.
+- `eza` (packaged on Ubuntu) replaces `ls`/`lt` in the dotfiles' zsh
+  `init`, guarded the same way as starship/zoxide/fzf there.
