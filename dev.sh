@@ -55,3 +55,15 @@ composer global show laravel/installer &> /dev/null || composer global require l
 # podman-compose, and delegated to by both `podman compose` and the
 # podman-docker `docker compose` alias) talks to. Needed for Sail etc.
 systemctl --user enable --now podman.socket
+
+# lazydocker isn't packaged on Ubuntu, so it's downloaded directly like
+# fonts.sh does for Nerd Fonts, keeping it identical across distros.
+LAZYDOCKER_VERSION="0.25.2"
+if ! command -v lazydocker &> /dev/null; then
+  tmp_dir="$(mktemp -d)"
+  curl -fLo "$tmp_dir/lazydocker.tar.gz" \
+    "https://github.com/jesseduffield/lazydocker/releases/download/v${LAZYDOCKER_VERSION}/lazydocker_${LAZYDOCKER_VERSION}_Linux_x86_64.tar.gz"
+  tar -xzf "$tmp_dir/lazydocker.tar.gz" -C "$tmp_dir" lazydocker
+  mv "$tmp_dir/lazydocker" "$HOME/.local/bin/lazydocker"
+  rm -rf "$tmp_dir"
+fi

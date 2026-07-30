@@ -6,7 +6,7 @@ sudo apt update && sudo apt full-upgrade -y
 sudo apt install -y build-essential git curl wget unzip ca-certificates \
   ripgrep fd-find fontconfig stow neovim tmux zsh \
   zsh-autosuggestions zsh-syntax-highlighting \
-  fastfetch btop htop
+  fastfetch btop htop lazygit
 
 # Build deps for compiling PHP from source via mise's php plugin (dev.sh).
 # libgd-dev pulls in libpng/libjpeg/libwebp/libxpm/libfreetype for --enable-gd.
@@ -19,6 +19,10 @@ sudo apt install -y autoconf bison gettext libcurl4-openssl-dev libedit-dev \
 # rootless by default, and Fedora doesn't ship Docker Engine in its repos.
 # podman-docker aliases the docker CLI to podman for tools that expect it.
 sudo apt install -y podman podman-docker podman-compose
+
+# Silences podman-docker's "Emulate Docker CLI using podman" notice on
+# every docker command.
+sudo touch /etc/containers/nodocker
 
 # No Ubuntu o binario do fd chama fdfind; o LazyVim espera fd
 mkdir -p ~/.local/bin

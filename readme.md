@@ -19,11 +19,11 @@ All three target GNOME as the desktop environment.
 | Script         | Purpose                                                              |
 |----------------|-----------------------------------------------------------------------|
 | `install.sh`   | Entry point. Detects the OS (via `/etc/os-release`) and dispatches.  |
-| `apt.sh`       | Ubuntu/Debian: system update, essential packages, `fd` symlink.      |
+| `apt.sh`       | Ubuntu/Debian: system update, essentials (incl. lazygit, Podman), `fd` symlink. |
 | `fedora.sh`    | Fedora equivalent of `apt.sh` (not implemented yet).                 |
 | `arch.sh`      | Arch equivalent of `apt.sh` (not implemented yet).                   |
 | `dotfiles.sh`  | Clones/updates [dotfiles](https://github.com/doguskysilva/dotfiles) and applies it with GNU Stow. |
-| `dev.sh`       | Cross-OS: Oh My Zsh, default shell, mise, and language runtimes (Node, PHP, Rust, Go, Java/Clojure/Leiningen, Python via uv). |
+| `dev.sh`       | Cross-OS: Oh My Zsh, default shell, mise + language runtimes, Composer, Podman socket, lazydocker. |
 | `fonts.sh`     | Cross-OS: installs JetBrainsMono/FiraCode Nerd Fonts + official JetBrains Mono. |
 | `gnome.sh`     | GNOME extensions, dconf settings, theming (not implemented yet).     |
 
@@ -50,8 +50,9 @@ This runs the OS-specific setup first, then the cross-OS steps
   script) on a machine that's already been set up, without duplicating work
   or failing on things that already exist.
 - `zsh-autosuggestions` and `zsh-syntax-highlighting` are installed as system
-  packages in `apt.sh` (`/usr/share/zsh/plugins/...`), which is the path the
-  dotfiles' `zshrc/.config/zsh/init` already expects.
+  packages in `apt.sh`. The dotfiles' `zshrc/.config/zsh/init` checks both
+  `/usr/share/<name>/` (this Ubuntu release) and `/usr/share/zsh/plugins/<name>/`
+  (older/other distros), since the path isn't consistent.
 - `fonts.sh` downloads fonts directly from GitHub releases (pinned versions)
   instead of distro packages, since patched Nerd Fonts aren't packaged on
   every distro. This keeps it identical across Ubuntu/Fedora/Arch. It
@@ -92,8 +93,13 @@ This runs the OS-specific setup first, then the cross-OS steps
   external compose provider — so `docker compose ...` (what Laravel Sail
   calls) works unmodified. This needs Podman's user API socket running
   (`systemctl --user enable --now podman.socket`, in `dev.sh`), which is
-  what `docker-compose-v2` actually talks to.
+  what `docker-compose-v2` actually talks to. `apt.sh` also touches
+  `/etc/containers/nodocker` to silence podman-docker's "Emulate Docker CLI
+  using podman" notice on every `docker` invocation.
 - Ubuntu wires apt's "command not found" suggestions into bash via
   `/etc/bash.bashrc` automatically, but not into zsh — `/etc/zsh_command_not_found`
   exists but needs an explicit `source`, which the dotfiles' `.zshrc` now
   does (guarded, since that file is Ubuntu/Debian-only).
+- `lazygit` is packaged on Ubuntu, so it's in `apt.sh`. `lazydocker` isn't,
+  so `dev.sh` downloads its binary directly from GitHub releases (pinned
+  version), same approach as `fonts.sh`.
