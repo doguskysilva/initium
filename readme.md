@@ -134,3 +134,8 @@ This runs the OS-specific setup first, then the cross-OS steps
   GitHub Copilot CLI via npm (`@openai/codex`, `@github/copilot`). Some of
   these installers append their own PATH line directly to the dotfiles'
   `.zshrc` (e.g. OpenCode) — expected, not something to revert.
+- Ghostty and VS Code are desktop apps but still OS-package-manager
+  installs, so they live in `apt.sh` like everything else there, not a
+  separate script. Ghostty is packaged on Ubuntu directly; VS Code isn't,
+  so `apt.sh` adds Microsoft's own apt repo (their recommended method for
+  Debian/Ubuntu) instead of the snap build.

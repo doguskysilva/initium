@@ -6,7 +6,7 @@ sudo apt update && sudo apt full-upgrade -y
 sudo apt install -y build-essential git curl wget unzip ca-certificates \
   ripgrep fd-find fontconfig stow neovim vim tmux zsh \
   zsh-autosuggestions zsh-syntax-highlighting \
-  fastfetch btop htop lazygit rlwrap starship zoxide fzf
+  fastfetch btop htop lazygit rlwrap starship zoxide fzf ghostty
 
 # Build deps for compiling PHP from source via mise's php plugin (dev.sh).
 # libgd-dev pulls in libpng/libjpeg/libwebp/libxpm/libfreetype for --enable-gd.
@@ -30,6 +30,17 @@ sudo touch /etc/containers/nodocker
 # plain `vim` opens nvim. Point it back at the real vim instead.
 real_vim="$(update-alternatives --list vim 2>/dev/null | grep -v nvim | head -1)"
 [ -n "$real_vim" ] && sudo update-alternatives --set vim "$real_vim"
+
+# VS Code: not in Ubuntu's repos, official Microsoft-recommended install
+# is their own apt repo (avoids the snap build).
+wget -qO- https://packages.microsoft.com/keys/microsoft.gpg | gpg --dearmor > /tmp/packages.microsoft.gpg
+sudo install -D -o root -g root -m 644 /tmp/packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
+echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" \
+  | sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
+rm -f /tmp/packages.microsoft.gpg
+
+sudo apt update
+sudo apt install -y code
 
 # No Ubuntu o binario do fd chama fdfind; o LazyVim espera fd
 mkdir -p ~/.local/bin
