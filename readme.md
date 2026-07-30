@@ -141,3 +141,7 @@ This runs the OS-specific setup first, then the cross-OS steps
   Debian/Ubuntu) instead of the snap build. Their GPG key moved from
   `keys/microsoft.gpg` to `keys/microsoft.asc` (the old URL now 404s) -
   worth re-checking if this breaks again.
+- `gh` (GitHub CLI) also goes through its own apt repo (`cli.github.com/packages`),
+  same reasoning as VS Code: Ubuntu's package (2.46.0) was ~50 releases
+  behind upstream (2.96.0). Their signing key expires 2026-09-05 - if `gh`
+  installs start failing after that, it's the key, re-fetch the URL.

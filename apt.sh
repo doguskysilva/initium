@@ -42,6 +42,17 @@ rm -f /tmp/packages.microsoft.gpg
 sudo apt update
 sudo apt install -y code
 
+# gh: Ubuntu's repo is far behind upstream, so use GitHub's own apt repo
+# (their recommended install method) instead.
+wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | gpg --dearmor > /tmp/githubcli-archive-keyring.gpg
+sudo install -D -o root -g root -m 644 /tmp/githubcli-archive-keyring.gpg /etc/apt/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
+  | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+rm -f /tmp/githubcli-archive-keyring.gpg
+
+sudo apt update
+sudo apt install -y gh
+
 # No Ubuntu o binario do fd chama fdfind; o LazyVim espera fd
 mkdir -p ~/.local/bin
 ln -sf "$(which fdfind)" ~/.local/bin/fd
