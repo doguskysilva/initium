@@ -23,7 +23,7 @@ All three target GNOME as the desktop environment.
 | `fedora.sh`    | Fedora equivalent of `apt.sh` (not implemented yet).                 |
 | `arch.sh`      | Arch equivalent of `apt.sh` (not implemented yet).                   |
 | `dotfiles.sh`  | Clones/updates [dotfiles](https://github.com/doguskysilva/dotfiles) and applies it with GNU Stow. |
-| `dev.sh`       | Cross-OS: installs Oh My Zsh and sets zsh as the default login shell. |
+| `dev.sh`       | Cross-OS: Oh My Zsh, default shell, mise, Node.js (LTS) and PHP 8.4.  |
 | `fonts.sh`     | Cross-OS: installs JetBrainsMono/FiraCode Nerd Fonts + official JetBrains Mono. |
 | `gnome.sh`     | GNOME extensions, dconf settings, theming (not implemented yet).     |
 
@@ -58,3 +58,9 @@ This runs the OS-specific setup first, then the cross-OS steps
   installs Nerd Font builds of JetBrainsMono and FiraCode (for
   terminal/tmux/nvim/starship), plus the official unpatched JetBrains Mono
   (kept in reserve, e.g. as a GNOME UI font, decided in `gnome.sh`).
+- Node.js and PHP are installed via `mise` (not distro packages), so
+  `dev.sh` stays identical across Ubuntu/Fedora/Arch. `mise` compiles PHP
+  from source (via `php-build`), so `apt.sh` includes its build
+  dependencies (`autoconf`, `libxml2-dev`, etc.) alongside the essentials.
+  There is no Laravel Herd on Linux (macOS/Windows only), so don't
+  reintroduce a `herd-lite` PATH entry in the dotfiles' `.zshrc`.

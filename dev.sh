@@ -9,3 +9,12 @@ fi
 if [ "$(basename "$SHELL")" != "zsh" ]; then
   sudo chsh -s "$(command -v zsh)" "$USER"
 fi
+
+if ! command -v mise &> /dev/null; then
+  curl https://mise.run | sh
+fi
+
+export PATH="$HOME/.local/bin:$PATH"
+
+mise use -g node@lts
+mise use -g php@8.4
