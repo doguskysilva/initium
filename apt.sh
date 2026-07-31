@@ -17,6 +17,13 @@ sudo apt install -y autoconf bison gettext libcurl4-openssl-dev libedit-dev \
   libqdbm-dev libreadline-dev libsodium-dev libsqlite3-dev libssl-dev \
   libxml2-dev libzip-dev pkg-config re2c zlib1g-dev
 
+# dev.sh installs Ruby precompiled (no build needed), but common gems'
+# native extensions still want these (ffi, psych, etc.). sqlite3 (the
+# CLI, not just libsqlite3-dev above) is also here since Rails defaults
+# to SQLite.
+sudo apt install -y patch libyaml-dev libgmp-dev libncurses-dev libffi-dev \
+  libgdbm-dev libgdbm-compat-dev libdb-dev uuid-dev sqlite3
+
 # Podman instead of Docker: works the same across Ubuntu/Fedora/Arch,
 # rootless by default, and Fedora doesn't ship Docker Engine in its repos.
 # podman-docker aliases the docker CLI to podman for tools that expect it.
@@ -52,6 +59,11 @@ rm -f /tmp/githubcli-archive-keyring.gpg
 
 sudo apt update
 sudo apt install -y gh
+
+# GNOME tools + Flatpak (gnome.sh handles the rest: Flathub remote,
+# extensions, dconf).
+sudo apt install -y gnome-tweaks gnome-shell-extension-manager \
+  dconf-editor gnome-sushi flatpak gnome-software-plugin-flatpak
 
 # No Ubuntu o binario do fd chama fdfind; o LazyVim espera fd
 mkdir -p ~/.local/bin

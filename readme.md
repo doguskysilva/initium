@@ -26,7 +26,7 @@ All three target GNOME as the desktop environment.
 | `dev.sh`       | Cross-OS: Oh My Zsh, default shell, mise + language runtimes, Composer, Podman socket, lazydocker. |
 | `ia.sh`        | Cross-OS: Claude Code, Codex CLI, OpenCode, GitHub Copilot CLI.      |
 | `fonts.sh`     | Cross-OS: installs JetBrainsMono/FiraCode Nerd Fonts + official JetBrains Mono. |
-| `gnome.sh`     | GNOME extensions, dconf settings, theming (not implemented yet).     |
+| `gnome.sh`     | Adds the Flathub remote. GNOME packages themselves (Tweaks, Extension Manager, dconf-editor, Sushi, Flatpak) are in `apt.sh`. Extensions/dconf/theming still to come. |
 
 ## Usage
 
@@ -147,3 +147,15 @@ This runs the OS-specific setup first, then the cross-OS steps
   installs start failing after that, it's the key, re-fetch the URL.
 - `eza` (packaged on Ubuntu) replaces `ls`/`lt` in the dotfiles' zsh
   `init`, guarded the same way as starship/zoxide/fzf there.
+- Ruby is installed precompiled (`mise settings set ruby.compile false`
+  before `mise use -g ruby@latest`) instead of via ruby-build's default
+  compile-from-source - much faster, and becomes mise's own default in
+  2026.8.0 anyway. `apt.sh` still installs the usual native-extension
+  deps (`libffi-dev`, `libyaml-dev`, etc.) since gems like `nokogiri` or
+  `sqlite3` need them regardless of how Ruby itself was installed.
+  `dev.sh` then installs Rails via `gem install rails`.
+- GNOME base: `apt.sh` installs `gnome-tweaks`, `gnome-shell-extension-manager`,
+  `dconf-editor`, `gnome-sushi`, `flatpak` and `gnome-software-plugin-flatpak`.
+  `gnome.sh` adds the Flathub remote (`flatpak remote-add`, not a package
+  install, so it doesn't belong in `apt.sh`) — works without `sudo`, Ubuntu's
+  polkit rules let the session user manage system Flatpak remotes.

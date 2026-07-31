@@ -51,6 +51,14 @@ fi
 uv python install 3.14
 uv python pin --global 3.14
 
+# Precompiled Ruby (mise defaults to compiling from source via ruby-build
+# otherwise, which needs a much longer list of build deps for little
+# benefit - this becomes mise's own default in 2026.8.0).
+mise settings set ruby.compile false
+mise use -g ruby@latest
+
+gem list -i '^rails$' &> /dev/null || gem install rails --no-document
+
 # COMPOSER_HOME is pinned via dotfiles' zsh envs so it doesn't move when
 # mise bumps the PHP patch version (see readme notes).
 export COMPOSER_HOME="$HOME/.config/composer"

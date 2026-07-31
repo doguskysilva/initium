@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# TODO: extensions, dconf settings, temas do GNOME. Comum a qualquer
-# SO, com pequenos ajustes de pacote quando necessario.
-
-echo "gnome.sh ainda nao implementado" >&2
-exit 1
+# Flathub, for day-to-day GUI apps.
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
