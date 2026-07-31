@@ -37,6 +37,10 @@ All three target GNOME as the desktop environment.
 This runs the OS-specific setup first, then the cross-OS steps
 (`dotfiles.sh`, `dev.sh`, `ia.sh`, `fonts.sh`, `gnome.sh`) in that order.
 
+## Docs
+
+- [GNOME keyboard shortcuts](docs/gnome-shortcuts.md)
+
 ## Notes
 
 - The actual dotfiles (Neovim/LazyVim, tmux, zsh, starship, git config) live
@@ -159,3 +163,14 @@ This runs the OS-specific setup first, then the cross-OS steps
   `gnome.sh` adds the Flathub remote (`flatpak remote-add`, not a package
   install, so it doesn't belong in `apt.sh`) — works without `sudo`, Ubuntu's
   polkit rules let the session user manage system Flatpak remotes.
+- Everyday apps: LibreOffice and VLC are packaged on Ubuntu, plus
+  `ubuntu-restricted-extras` for the codec/font bundle GNOME's default
+  apps and Firefox need (VLC bundles its own codecs regardless). Chrome
+  and 1Password (+ CLI) both get their own apt repos (their recommended
+  install method, same reasoning as VS Code/gh) instead of a one-off
+  `.deb`, so they auto-update via apt too. 1Password's repo setup also
+  installs their debsig signature policy, per their official instructions.
+- Podman Desktop is installed via Flatpak in `gnome.sh`
+  (`io.podman_desktop.PodmanDesktop`) — native Podman support without
+  the Docker-API-emulation asterisks `lazydocker` has (see the `dev.sh`
+  notes on Podman above).

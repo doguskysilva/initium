@@ -65,6 +65,41 @@ sudo apt install -y gh
 sudo apt install -y gnome-tweaks gnome-shell-extension-manager \
   dconf-editor gnome-sushi flatpak gnome-software-plugin-flatpak
 
+# Everyday apps: office suite, video player, and Ubuntu's codec/font
+# bundle (VLC bundles its own codecs, but this covers GNOME's default
+# players, Firefox, etc. too).
+sudo apt install -y libreoffice vlc ubuntu-restricted-extras
+
+# Google Chrome: own apt repo, their recommended install method.
+wget -qO- https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /tmp/google-chrome.gpg
+sudo install -D -o root -g root -m 644 /tmp/google-chrome.gpg /etc/apt/keyrings/google-chrome.gpg
+echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" \
+  | sudo tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
+rm -f /tmp/google-chrome.gpg
+
+sudo apt update
+sudo apt install -y google-chrome-stable
+
+# 1Password + CLI: their own apt repo (not a standalone .deb, so it
+# auto-updates via apt like everything else here). Includes their
+# debsig signature policy, per their official install instructions.
+wget -qO- https://downloads.1password.com/linux/keys/1password.asc | gpg --dearmor > /tmp/1password-archive-keyring.gpg
+sudo install -D -o root -g root -m 644 /tmp/1password-archive-keyring.gpg /usr/share/keyrings/1password-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/1password-archive-keyring.gpg] https://downloads.1password.com/linux/debian/amd64 stable main" \
+  | sudo tee /etc/apt/sources.list.d/1password.list > /dev/null
+rm -f /tmp/1password-archive-keyring.gpg
+
+sudo mkdir -p /etc/debsig/policies/AC2D62742012EA22
+wget -qO- https://downloads.1password.com/linux/debian/debsig/1password.pol \
+  | sudo tee /etc/debsig/policies/AC2D62742012EA22/1password.pol > /dev/null
+
+sudo mkdir -p /usr/share/debsig/keyrings/AC2D62742012EA22
+wget -qO- https://downloads.1password.com/linux/keys/1password.asc \
+  | gpg --dearmor | sudo tee /usr/share/debsig/keyrings/AC2D62742012EA22/debsig.gpg > /dev/null
+
+sudo apt update
+sudo apt install -y 1password 1password-cli
+
 # No Ubuntu o binario do fd chama fdfind; o LazyVim espera fd
 mkdir -p ~/.local/bin
 ln -sf "$(which fdfind)" ~/.local/bin/fd
