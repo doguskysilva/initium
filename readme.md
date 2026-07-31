@@ -174,3 +174,11 @@ This runs the OS-specific setup first, then the cross-OS steps
   (`io.podman_desktop.PodmanDesktop`) — native Podman support without
   the Docker-API-emulation asterisks `lazydocker` has (see the `dev.sh`
   notes on Podman above).
+- tmux's theme/general settings are plain tmux styling ported from
+  [Omarchy's tmux.conf](https://github.com/basecamp/omarchy/blob/quattro/config/tmux/tmux.conf)
+  (General/Status bar/Theme sections only — its prefix and keybindings
+  stayed ours). No plugin: colors use the terminal's own ANSI palette
+  (`blue`, `black`, `brightblack`, `default`) instead of hardcoded hex,
+  so it follows whatever colorscheme/dark-light mode is active. Tried
+  tokyo-night-tmux first, dropped it — didn't look good and needed
+  `gawk`/`playerctl` for widgets we weren't even using.
